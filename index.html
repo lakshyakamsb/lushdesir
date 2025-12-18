@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>COD Product Order</title>
+
+<style>
+  body { font-family: Arial; max-width: 500px; margin: 30px auto; }
+  .product { border: 1px solid #ccc; padding: 15px; margin-bottom: 20px; text-align: center; }
+  .product button { background: black; color: white; padding: 10px; border: none; cursor: pointer; }
+  #orderForm { display: none; padding: 20px; border: 1px solid #ccc; margin-top: 20px; }
+  input, textarea { width: 100%; padding: 10px; margin: 8px 0; }
+</style>
+</head>
+
+<body>
+
+<!-- PRODUCT LIST -->
+<div class="product">
+  <h2 data-name="Realistic Dildo 8 Inch" data-price="1499">Realistic Dildo 8 Inch</h2>
+  <p>Price: ₹1499</p>
+  <button class="orderBtn">Order on Cash on Delivery</button>
+</div>
+
+<div class="product">
+  <h2 data-name="Lube Gel 100ml" data-price="299">Lube Gel 100ml</h2>
+  <p>Price: ₹299</p>
+  <button class="orderBtn">Order on Cash on Delivery</button>
+</div>
+
+<div class="product">
+  <h2 data-name="Sex Enhancement Capsule" data-price="399">Sex Enhancement Capsule</h2>
+  <p>Price: ₹399</p>
+  <button class="orderBtn">Order on Cash on Delivery</button>
+</div>
+
+<div class="product">
+  <h2 data-name="Nipple Clamp Soft Grip" data-price="349">Nipple Clamp Soft Grip</h2>
+  <p>Price: ₹349</p>
+  <button class="orderBtn">Order on Cash on Delivery</button>
+</div>
+
+<!-- ORDER FORM -->
+<div id="orderForm">
+  <h3>Enter Delivery Details</h3>
+
+  <label>Product Name</label>
+  <input type="text" id="productName" readonly>
+
+  <label>Product Price</label>
+  <input type="text" id="productPrice" readonly>
+
+  <label>Your Name</label>
+  <input type="text" id="customerName" required>
+
+  <label>Mobile Number</label>
+  <input type="text" id="mobileNumber" required>
+
+  <label>Full Address</label>
+  <textarea id="fullAddress" required></textarea>
+
+  <button id="submitOrder">Submit Order</button>
+  <p id="msg"></p>
+</div>
+
+<script>
+/* ✅ UPDATED GOOGLE APPS SCRIPT URL */
+const GOOGLE_SCRIPT_URL =
+"https://script.google.com/macros/s/AKfycbwo71eakm1_K3T5hpAvE5d12kaiddyAZCr8uckt4QpZvo8onUWbkj4RYEDIBm-A0m63/exec";
+
+/* OPEN ORDER FORM */
+document.querySelectorAll(".orderBtn").forEach(btn => {
+  btn.addEventListener("click", function () {
+    const product = this.closest(".product").querySelector("h2");
+    document.getElementById("productName").value = product.dataset.name;
+    document.getElementById("productPrice").value = product.dataset.price;
+    document.getElementById("orderForm").style.display = "block";
+    document.getElementById("orderForm").scrollIntoView({ behavior: "smooth" });
+  });
+});
+
+/* SUBMIT ORDER */
+document.getElementById("submitOrder").addEventListener("click", function (e) {
+  e.preventDefault();
+
+  const data = new URLSearchParams();
+  data.append("productName", document.getElementById("productName").value);
+  data.append("productPrice", document.getElementById("productPrice").value);
+  data.append("customerName", document.getElementById("customerName").value);
+  data.append("mobileNumber", document.getElementById("mobileNumber").value);
+  data.append("fullAddress", document.getElementById("fullAddress").value);
+
+  fetch(GOOGLE_SCRIPT_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: data.toString()
+  })
+  .then(() => {
+    document.getElementById("msg").innerHTML = "✔ Order Placed Successfully!";
+    document.getElementById("msg").style.color = "green";
+  })
+  .catch(() => {
+    document.getElementById("msg").innerHTML = "❌ Error submitting order!";
+    document.getElementById("msg").style.color = "red";
+  });
+});
+</script>
+
+</body>
+</html>
